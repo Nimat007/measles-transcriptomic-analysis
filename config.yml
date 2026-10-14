@@ -1,0 +1,55 @@
+# ==============================================================================
+# MASTER CONFIGURATION: Target-Blind Host-Directed Discovery
+# ==============================================================================
+project_name: "MeV_Host_Directed_Discovery"
+random_seed: 12345
+
+directories:
+  data_raw: "data/raw"
+  data_processed: "data/processed"
+  results_bulk: "results/01_bulk"
+  results_sc: "results/02_single_cell"
+  plots: "results/plots"
+  logs: "results/logs"
+  diagnostics: "results/04_diagnostics"
+
+bulk_params:
+  dataset: "GSE229685"
+  expected_n: 23
+  model_design: "~ subject + time"
+  reduced_design: "~ subject"
+  min_count_floor: 10
+  min_count_sample_threshold: 3
+  discovery_fdr: 0.05
+  persistence_required: 3 # Set to 2, 3, or 4 for sensitivity sweeps
+
+scRNA_params:
+  dataset: "GSE168775"
+  # WARNING: Do NOT use bare single letters (e.g. "N", "F") unless you have 
+  # strictly verified they do not collide with human gene symbols in the matrix.
+  viral_feature_dictionary: ["GFP", "N", "P", "M", "F", "H", "L"]
+  qc:
+    absolute_min_features: 200
+    absolute_min_counts: 500
+    high_complexity_threshold: 8000
+    mad_threshold: 3
+  clustering:
+    reduction: "pca_rpca"
+    dims: 30
+    k_param: 20
+    resolution: 0.6
+    sensitivity_resolutions: [0.4, 0.6, 0.8]
+    algorithm: 1
+    n_start: 10
+    n_iter: 10
+    random_seed: 12345
+  annotation:
+    marker_panels:
+      Basal: ["KRT5", "TP63", "KRT15"]
+      Ciliated: ["CAPS", "FOXJ1", "TPPP3"]
+      Deuterosomal: ["CDC20B", "DEUP1", "FOXN4"]
+      Secretory: ["BPIFA1", "BPIFB1", "SCGB1A1"]
+      Mucous_Goblet: ["MUC5B"]
+      ISG_High: ["IFIT1", "IFIT2", "ISG15"]
+      Cycling: ["MKI67", "TOP2A", "PBK", "ASPM"]
+          
